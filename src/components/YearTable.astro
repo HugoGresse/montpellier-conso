@@ -20,15 +20,21 @@ const controlStatus = (row: YearRow) => {
 }
 ---
 
-<details class="card table-card">
+<details class="card table-card" data-year-table>
   <summary>Voir les données en tableau</summary>
   <div class="scroll">
     <table>
       <thead>
         <tr>
           <th scope="col">Année</th>
-          {series.map((s) => <th scope="col">{s.label}</th>)}
-          <th scope="col">Total</th>
+          {series.map((s) => (
+            <th scope="col" data-group={s.id}>
+              {s.label}
+            </th>
+          ))}
+          <th scope="col" data-total-header>
+            Total
+          </th>
           <th scope="col">Contrôle DGFiP</th>
         </tr>
       </thead>
@@ -37,8 +43,14 @@ const controlStatus = (row: YearRow) => {
           [...rows].reverse().map((row) => (
             <tr>
               <th scope="row">{row.year}</th>
-              {series.map((s) => <td>{cell(row, s.id)}</td>)}
-              <td class="total">{formatEuros(row.total)}</td>
+              {series.map((s) => (
+                <td data-group={s.id} data-value={row.byGroup[s.id] ?? 0}>
+                  {cell(row, s.id)}
+                </td>
+              ))}
+              <td class="total" data-row-total>
+                {formatEuros(row.total)}
+              </td>
               <td class="control">{controlStatus(row)}</td>
             </tr>
           ))
@@ -47,6 +59,32 @@ const controlStatus = (row: YearRow) => {
     </table>
   </div>
 </details>
+
+<script>
+  import { formatEuros } from '../lib/format'
+
+  document.addEventListener('chart:selection', (event) => {
+    const selected = new Set((event as CustomEvent<string[]>).detail)
+    for (const table of document.querySelectorAll<HTMLElement>('[data-year-table]')) {
+      const groups = new Set(
+        [...table.querySelectorAll<HTMLElement>('th[data-group]')].map((th) => th.dataset.group),
+      )
+      const all = [...groups].every((id) => id && selected.has(id))
+      for (const cell of table.querySelectorAll<HTMLElement>('[data-group]')) {
+        cell.hidden = !selected.has(cell.dataset.group ?? '')
+      }
+      for (const row of table.querySelectorAll('tbody tr')) {
+        const total = [...row.querySelectorAll<HTMLElement>('td[data-group]')]
+          .filter((cell) => !cell.hidden)
+          .reduce((sum, cell) => sum + Number(cell.dataset.value ?? 0), 0)
+        const totalCell = row.querySelector<HTMLElement>('[data-row-total]')
+        if (totalCell) totalCell.textContent = formatEuros(total)
+      }
+      const header = table.querySelector<HTMLElement>('[data-total-header]')
+      if (header) header.textContent = all ? 'Total' : 'Total (sélection)'
+    }
+  })
+</script>
 
 <style>
   .table-card {

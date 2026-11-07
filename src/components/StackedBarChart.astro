@@ -1,7 +1,7 @@
 ---
 import type { YearRow } from '../lib/aggregate'
-import { niceTicks, type Series, stackBars, topRoundedRect } from '../lib/chart'
-import { formatCompactEuros, formatEuros } from '../lib/format'
+import type { Series } from '../lib/chart'
+import { renderChartSvg } from '../lib/chart-svg'
 
 interface Props {
   rows: YearRow[]
@@ -10,226 +10,263 @@ interface Props {
 }
 
 const { rows, series, caption } = Astro.props
-
-const WIDTH = 720
-const HEIGHT = 380
-const area = { left: 64, top: 28, width: WIDTH - 64 - 12, height: HEIGHT - 28 - 36 }
-
-const ticks = niceTicks(Math.max(...rows.map((row) => row.total)))
-const maxTick = ticks.at(-1) ?? 1
-const order = series.map((s) => s.id)
-const bars = stackBars(rows, order, area, maxTick)
-const seriesById = new Map(series.map((s) => [s.id, s]))
-const yOf = (value: number) => area.top + area.height - (value / maxTick) * area.height
-const last = bars.at(-1)
-const lastRow = rows.at(-1)
-
-const fill = (id: string) => {
-  const s = seriesById.get(id)
-  return s?.hatched ? 'url(#hatch)' : (s?.color ?? 'var(--series-neutral)')
-}
-
-const tooltipRows = rows.map((row) => ({
-  year: row.year,
-  total: formatEuros(row.total),
-  source: row.source,
-  parts: order
-    .filter((id) => (row.byGroup[id] ?? 0) > 0)
-    .reverse()
-    .map((id) => ({
-      label: seriesById.get(id)?.label ?? id,
-      color: seriesById.get(id)?.color ?? 'var(--series-neutral)',
-      value: formatEuros(row.byGroup[id] ?? 0),
-    })),
-}))
+const allSelected = new Set(series.map((s) => s.id))
+const payload = JSON.stringify({ rows, series, caption })
 ---
 
-<figure class="chart card" data-chart={JSON.stringify(tooltipRows)}>
-  <figcaption class="caption">{caption}</figcaption>
-
-  <ul class="legend" aria-label="Légende">
+<div class="explorer" data-chart={payload}>
+  <div class="filters" role="group" aria-label="Services affichés">
+    <span class="filters-label">Services</span>
     {
       [...series].reverse().map((s) => (
-        <li>
+        <button type="button" class="chip" aria-pressed="true" data-series={s.id}>
           <span class:list={['swatch', { hatched: s.hatched }]} style={`--swatch: ${s.color}`} />
           {s.label}
-        </li>
+        </button>
       ))
     }
-  </ul>
-
-  <div class="plot">
-    <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={caption}>
-      <defs>
-        <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="6" height="6" fill="var(--surface-1)"></rect>
-          <line x1="0" y1="0" x2="0" y2="6" stroke="var(--series-neutral)" stroke-width="3"></line>
-        </pattern>
-      </defs>
-
-      {
-        ticks.map((tick) => (
-          <g class="tick">
-            <line x1={area.left} x2={area.left + area.width} y1={yOf(tick)} y2={yOf(tick)} />
-            <text x={area.left - 8} y={yOf(tick)} dy="0.35em" text-anchor="end">
-              {tick === 0 ? '0' : formatCompactEuros(tick)}
-            </text>
-          </g>
-        ))
-      }
-
-      {
-        bars.map((bar, index) => (
-          <g class="bar" data-index={index}>
-            {bar.segments.map((segment) =>
-              segment.isTop ? (
-                <path
-                  d={topRoundedRect(bar.x, segment.y, bar.width, segment.height)}
-                  fill={fill(segment.groupId)}
-                />
-              ) : (
-                <rect
-                  x={bar.x}
-                  y={segment.y}
-                  width={bar.width}
-                  height={segment.height}
-                  fill={fill(segment.groupId)}
-                />
-              ),
-            )}
-            {index % 2 === 0 && (
-              <text class="year" x={bar.x + bar.width / 2} y={area.top + area.height + 22} text-anchor="middle">
-                {bar.year}
-              </text>
-            )}
-            <rect
-              class="hit"
-              x={bar.slotX}
-              y={area.top}
-              width={bar.slotWidth}
-              height={area.height + 28}
-              tabindex="0"
-              role="button"
-              aria-label={`${bar.year} : ${tooltipRows[index]?.total}`}
-              data-index={index}
-            />
-          </g>
-        ))
-      }
-
-      <line
-        class="baseline"
-        x1={area.left}
-        x2={area.left + area.width}
-        y1={area.top + area.height}
-        y2={area.top + area.height}
-      />
-
-      {
-        last && lastRow && (
-          <text class="direct-label" x={last.x + last.width} y={yOf(lastRow.total) - 8} text-anchor="end">
-            {formatCompactEuros(lastRow.total)}
-          </text>
-        )
-      }
-    </svg>
-    <div class="tooltip" role="status" hidden></div>
+    <button type="button" class="reset" data-reset hidden>Tout afficher</button>
   </div>
-</figure>
+  <p class="filters-hint">Clic : afficher ou masquer un service. Double-clic : ne garder que lui.</p>
+
+  <figure class="chart card">
+    <figcaption class="caption">
+      {caption}
+      <span class="selection-total" aria-live="polite"></span>
+    </figcaption>
+    <div class="plot">
+      <Fragment set:html={renderChartSvg(rows, series, allSelected, caption)} />
+      <div class="tooltip" role="status" hidden></div>
+    </div>
+  </figure>
+</div>
 
 <script>
-  interface TooltipPart {
-    label: string
-    color: string
-    value: string
+  import type { YearRow } from '../lib/aggregate'
+  import type { Series } from '../lib/chart'
+  import {
+    parseSelection,
+    renderChartSvg,
+    selectRows,
+    serializeSelection,
+    toggleSelection,
+  } from '../lib/chart-svg'
+  import { formatEuros } from '../lib/format'
+
+  interface Payload {
+    rows: YearRow[]
+    series: Series[]
+    caption: string
   }
-  interface TooltipRow {
-    year: number
-    total: string
-    source: 'ville' | 'dgfip'
-    parts: TooltipPart[]
+
+  const QUERY_KEY = 'services'
+
+  function buildTooltip(row: YearRow, series: Series[]): DocumentFragment {
+    const fragment = document.createDocumentFragment()
+    const total = document.createElement('strong')
+    total.className = 'tt-total'
+    total.textContent = formatEuros(row.total)
+    const year = document.createElement('span')
+    year.className = 'tt-year'
+    year.textContent = String(row.year)
+    const list = document.createElement('ul')
+    for (const s of [...series].reverse()) {
+      const value = row.byGroup[s.id]
+      if (!value) continue
+      const item = document.createElement('li')
+      const key = document.createElement('span')
+      key.className = 'tt-key'
+      key.style.background = s.color
+      const amount = document.createElement('span')
+      amount.className = 'tt-value'
+      amount.textContent = formatEuros(value)
+      const label = document.createElement('span')
+      label.className = 'tt-label'
+      label.textContent = s.label
+      item.append(key, amount, label)
+      list.append(item)
+    }
+    fragment.append(total, year, list)
+    if (row.source === 'dgfip') {
+      const note = document.createElement('small')
+      note.textContent = 'Total DGFiP, non ventilé'
+      fragment.append(note)
+    }
+    return fragment
   }
 
-  const escapeHtml = (text: string) =>
-    text.replace(/[&<>"]/g, (char) => `&#${char.charCodeAt(0)};`)
+  function mount(root: HTMLElement) {
+    const { rows, series, caption } = JSON.parse(root.dataset.chart ?? '{}') as Payload
+    const plot = root.querySelector<HTMLElement>('.plot')
+    const tooltip = root.querySelector<HTMLElement>('.tooltip')
+    const reset = root.querySelector<HTMLButtonElement>('[data-reset]')
+    const totalLabel = root.querySelector<HTMLElement>('.selection-total')
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-series]')]
+    if (!plot || !tooltip || !reset || !totalLabel) return
 
-  const render = (row: TooltipRow) => `
-    <strong>${row.year}</strong>
-    <span class="tt-total">${escapeHtml(row.total)}</span>
-    <ul>${row.parts
-      .map(
-        (part) =>
-          `<li><span class="tt-swatch" style="background:${part.color}"></span>${escapeHtml(part.label)}<span>${escapeHtml(part.value)}</span></li>`,
-      )
-      .join('')}</ul>
-    ${row.source === 'dgfip' ? '<small>Total DGFiP, non ventilé</small>' : ''}`
+    const url = new URL(window.location.href)
+    let selected: ReadonlySet<string> = parseSelection(url.searchParams.get(QUERY_KEY), series)
+    let visibleRows = selectRows(rows, selected)
 
-  for (const figure of document.querySelectorAll<HTMLElement>('[data-chart]')) {
-    const rows = JSON.parse(figure.dataset.chart ?? '[]') as TooltipRow[]
-    const plot = figure.querySelector<HTMLElement>('.plot')
-    const tooltip = figure.querySelector<HTMLElement>('.tooltip')
-    if (!plot || !tooltip) continue
+    const hideTooltip = () => {
+      tooltip.hidden = true
+      plot.querySelectorAll('.bar.active').forEach((bar) => bar.classList.remove('active'))
+    }
 
-    const show = (target: Element) => {
-      const row = rows[Number((target as HTMLElement).dataset.index)]
+    const showTooltip = (hit: Element) => {
+      const row = visibleRows[Number((hit as HTMLElement).dataset.index)]
       if (!row) return
-      figure.querySelectorAll('.bar.active').forEach((bar) => bar.classList.remove('active'))
-      target.closest('.bar')?.classList.add('active')
-      tooltip.innerHTML = render(row)
+      plot.querySelectorAll('.bar.active').forEach((bar) => bar.classList.remove('active'))
+      hit.closest('.bar')?.classList.add('active')
+      tooltip.replaceChildren(buildTooltip(row, series))
       tooltip.hidden = false
-      const hit = target.getBoundingClientRect()
+      const target = hit.getBoundingClientRect()
       const box = plot.getBoundingClientRect()
-      const left = hit.left - box.left + plot.scrollLeft + hit.width / 2
-      const fitsRight = left + tooltip.offsetWidth + 12 < plot.scrollLeft + box.width
-      tooltip.style.left = `${fitsRight ? left + 12 : left - tooltip.offsetWidth - 12}px`
+      const center = target.left - box.left + plot.scrollLeft + target.width / 2
+      const fitsRight = center + tooltip.offsetWidth + 12 < plot.scrollLeft + box.width
+      tooltip.style.left = `${fitsRight ? center + 12 : center - tooltip.offsetWidth - 12}px`
       tooltip.style.top = '8px'
     }
-    const hide = () => {
-      tooltip.hidden = true
-      figure.querySelectorAll('.bar.active').forEach((bar) => bar.classList.remove('active'))
+
+    const bindHits = () => {
+      for (const hit of plot.querySelectorAll('.hit')) {
+        hit.addEventListener('pointerenter', () => showTooltip(hit))
+        hit.addEventListener('focus', () => showTooltip(hit))
+        hit.addEventListener('blur', hideTooltip)
+      }
     }
 
-    for (const hit of figure.querySelectorAll('.hit')) {
-      hit.addEventListener('pointerenter', () => show(hit))
-      hit.addEventListener('focus', () => show(hit))
-      hit.addEventListener('blur', hide)
+    const render = () => {
+      visibleRows = selectRows(rows, selected)
+      hideTooltip()
+      plot.querySelector('svg')?.remove()
+      plot.insertAdjacentHTML('afterbegin', renderChartSvg(rows, series, selected, caption))
+      bindHits()
+
+      const all = selected.size === series.length
+      reset.hidden = all
+      for (const chip of chips) {
+        chip.setAttribute('aria-pressed', String(selected.has(chip.dataset.series ?? '')))
+      }
+      totalLabel.textContent = all ? '' : ' (sélection)'
+
+      const query = serializeSelection(selected, series)
+      if (query) url.searchParams.set(QUERY_KEY, query)
+      else url.searchParams.delete(QUERY_KEY)
+      history.replaceState(null, '', url)
     }
-    plot.addEventListener('pointerleave', hide)
+
+    const announce = () =>
+      document.dispatchEvent(new CustomEvent('chart:selection', { detail: [...selected] }))
+
+    const update = () => {
+      render()
+      announce()
+    }
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        selected = toggleSelection(selected, chip.dataset.series ?? '')
+        update()
+      })
+      chip.addEventListener('dblclick', () => {
+        selected = new Set([chip.dataset.series ?? ''])
+        update()
+      })
+    }
+    reset.addEventListener('click', () => {
+      selected = new Set(series.map((s) => s.id))
+      update()
+    })
+    plot.addEventListener('pointerleave', hideTooltip)
+
+    if (selected.size === series.length) {
+      bindHits()
+      return
+    }
+    render()
+    if (document.readyState === 'complete') announce()
+    else window.addEventListener('load', announce, { once: true })
   }
+
+  document.querySelectorAll<HTMLElement>('[data-chart]').forEach(mount)
 </script>
 
 <style>
-  .chart {
-    margin: 0;
-  }
-
-  .caption {
-    font-weight: 600;
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
     margin-bottom: 0.75rem;
   }
 
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.1rem;
-    list-style: none;
-    margin: 0 0 0.75rem;
-    padding: 0;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
+  .filters-hint {
+    margin: -0.35rem 0 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
   }
 
-  .legend li {
-    display: flex;
+  .filters-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-right: 0.25rem;
+  }
+
+  .chip,
+  .reset {
+    display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-1);
+    color: var(--text-primary);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .chip[aria-pressed='false'] {
+    color: var(--text-muted);
+    background: transparent;
+    border-style: dashed;
+  }
+
+  .chip[aria-pressed='false'] .swatch {
+    background: transparent;
+    outline: 1.5px solid var(--swatch);
+    outline-offset: -1.5px;
+  }
+
+  .chip:hover,
+  .reset:hover {
+    border-color: var(--text-muted);
+  }
+
+  .chip:focus-visible,
+  .reset:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .reset {
+    border-color: transparent;
+    color: var(--accent);
+    background: transparent;
+  }
+
+  .reset[hidden] {
+    display: none;
   }
 
   .swatch {
-    width: 0.8rem;
-    height: 0.8rem;
+    width: 0.75rem;
+    height: 0.75rem;
     border-radius: 3px;
     background: var(--swatch);
+    flex: none;
   }
 
   .swatch.hatched {
@@ -241,12 +278,26 @@ const tooltipRows = rows.map((row) => ({
     outline: 1px solid var(--series-neutral);
   }
 
+  .chart {
+    margin: 0;
+  }
+
+  .caption {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .selection-total {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
   .plot {
     position: relative;
     overflow-x: auto;
   }
 
-  svg {
+  .plot :global(svg) {
     display: block;
     width: 100%;
     min-width: 560px;
@@ -254,48 +305,47 @@ const tooltipRows = rows.map((row) => ({
     font-size: 13px;
   }
 
-  .tick line {
+  .plot :global(.tick line) {
     stroke: var(--grid);
   }
 
-  .tick text,
-  .year {
+  .plot :global(:is(.tick text, .year)) {
     fill: var(--text-muted);
     font-variant-numeric: tabular-nums;
   }
 
-  .baseline {
+  .plot :global(.baseline) {
     stroke: var(--text-muted);
   }
 
-  .direct-label {
+  .plot :global(.direct-label) {
     fill: var(--text-primary);
     font-weight: 600;
   }
 
-  .hit {
+  .plot :global(.hit) {
     fill: transparent;
     cursor: pointer;
     outline: none;
   }
 
-  .bar :is(path, rect:not(.hit)) {
+  .plot :global(.hit:focus-visible) {
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+
+  .plot :global(.bar :is(path, rect:not(.hit))) {
     transition: opacity 120ms;
   }
 
-  .plot:has(.bar.active) .bar:not(.active) :is(path, rect:not(.hit)) {
+  .plot:has(:global(.bar.active)) :global(.bar:not(.active) :is(path, rect:not(.hit))) {
     opacity: 0.45;
-  }
-
-  .hit:focus-visible {
-    stroke: var(--accent);
-    stroke-width: 2;
   }
 
   .tooltip {
     position: absolute;
     z-index: 1;
-    min-width: 14rem;
+    min-width: 13rem;
     max-width: 18rem;
     padding: 0.6rem 0.75rem;
     border-radius: 8px;
@@ -305,14 +355,15 @@ const tooltipRows = rows.map((row) => ({
     pointer-events: none;
   }
 
-  .tooltip :global(strong) {
-    display: block;
-  }
-
   .tooltip :global(.tt-total) {
     display: block;
     font-size: 1.05rem;
-    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tooltip :global(.tt-year) {
+    display: block;
+    opacity: 0.75;
     margin-bottom: 0.35rem;
   }
 
@@ -324,18 +375,23 @@ const tooltipRows = rows.map((row) => ({
 
   .tooltip :global(li) {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 0.4rem;
+    grid-template-columns: 0.75rem auto 1fr;
+    gap: 0.45rem;
     align-items: center;
   }
 
-  .tooltip :global(li span:last-child) {
-    font-variant-numeric: tabular-nums;
+  .tooltip :global(.tt-key) {
+    height: 2px;
+    border-radius: 1px;
   }
 
-  .tooltip :global(.tt-swatch) {
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 2px;
+  .tooltip :global(.tt-value) {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .tooltip :global(.tt-label) {
+    opacity: 0.8;
   }
 </style>
