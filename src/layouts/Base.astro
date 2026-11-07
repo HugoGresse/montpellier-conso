@@ -1,0 +1,200 @@
+---
+interface Props {
+  title: string
+  description: string
+}
+
+const { title, description } = Astro.props
+const base = import.meta.env.BASE_URL
+const repoUrl = 'https://github.com/HugoGresse/montpellier-conso'
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href={base}>Montpellier, la mairie au compteur</a>
+      <nav aria-label="Navigation principale">
+        <a href={`${base}eau/`}>Eau</a>
+        <a href={`${base}demande-cada/`}>Demande CADA</a>
+        <a href={repoUrl}>Code et données</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>
+        Site indépendant, non affilié à la Ville de Montpellier. Données publiques sous licence
+        ODbL et Licence Ouverte ; code sur <a href={repoUrl}>GitHub</a>.
+      </p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: light;
+    --surface-0: #f5f4f1;
+    --surface-1: #fcfcfb;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #6b6a66;
+    --border: #e1e0db;
+    --grid: #ebeae6;
+    --accent: #1c5cab;
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --series-4: #eda100;
+    --series-5: #e87ba4;
+    --series-6: #008300;
+    --series-neutral: #a8a7a1;
+    --tooltip-bg: #0b0b0b;
+    --tooltip-text: #f0efec;
+    --good: #006300;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme='light'])) {
+      color-scheme: dark;
+      --surface-0: #121211;
+      --surface-1: #1a1a19;
+      --text-primary: #f0efec;
+      --text-secondary: #c3c2b7;
+      --text-muted: #9c9b93;
+      --border: #383835;
+      --grid: #2a2a28;
+      --accent: #86b6ef;
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --series-3: #199e70;
+      --series-4: #c98500;
+      --series-5: #d55181;
+      --series-6: #008300;
+      --series-neutral: #6b6a66;
+      --tooltip-bg: #f0efec;
+      --tooltip-text: #0b0b0b;
+      --good: #0ca30c;
+    }
+  }
+
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --surface-0: #121211;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #9c9b93;
+    --border: #383835;
+    --grid: #2a2a28;
+    --accent: #86b6ef;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
+    --series-neutral: #6b6a66;
+    --tooltip-bg: #f0efec;
+    --tooltip-text: #0b0b0b;
+    --good: #0ca30c;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--surface-0);
+    color: var(--text-primary);
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      sans-serif;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  a {
+    color: var(--accent);
+  }
+
+  main {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 4vw, 2.3rem);
+    line-height: 1.2;
+    margin: 0.5rem 0 0.75rem;
+    text-wrap: balance;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    margin: 2.5rem 0 0.75rem;
+  }
+
+  .lede {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 44rem;
+  }
+
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand {
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .site-header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .site-footer {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1rem 1rem 2rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    border-top: 1px solid var(--border);
+  }
+</style>

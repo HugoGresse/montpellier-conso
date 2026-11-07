@@ -1,0 +1,27 @@
+{
+  "name": "montpellier-conso",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Consommations et dépenses de la Ville de Montpellier, à partir de ses comptes publiés en open data",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "data": "bun scripts/build-data.ts",
+    "test": "bun test",
+    "typecheck": "astro check",
+    "lint": "biome check ."
+  },
+  "dependencies": {
+    "astro": "7.4.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@biomejs/biome": "2.6.6",
+    "@types/bun": "1.4.4",
+    "fast-xml-parser": "5.12.0",
+    "typescript": "6.0.3"
+  },
+  "packageManager": "bun@1.4.2"
+}

@@ -1,0 +1,211 @@
+---
+import HeadlineStats from '../components/HeadlineStats.astro'
+import StackedBarChart from '../components/StackedBarChart.astro'
+import YearTable from '../components/YearTable.astro'
+import dataset from '../data/comptes.json'
+import Base from '../layouts/Base.astro'
+import { formatDate } from '../lib/format'
+import { buildMetricView } from '../lib/metric-view'
+import { SOURCE_PAGES } from '../lib/sources'
+import type { Dataset, Metric } from '../lib/types'
+import { METRICS } from '../metrics'
+
+export function getStaticPaths() {
+  return METRICS.map((metric) => ({ params: { slug: metric.slug }, props: { metric } }))
+}
+
+interface Props {
+  metric: Metric
+}
+
+const { metric } = Astro.props
+const data = dataset as Dataset
+const { rows, series, functionsByGroup } = buildMetricView(metric, data)
+const firstYear = rows[0]?.year
+const lastYear = rows.at(-1)?.year
+const base = import.meta.env.BASE_URL
+---
+
+<Base title={`${metric.shortTitle} · Montpellier, la mairie au compteur`} description={metric.summary}>
+  <p class="eyebrow">{metric.natureLabel} · budget principal de la Ville</p>
+  <h1>{metric.title}</h1>
+  <p class="lede">{metric.summary}</p>
+
+  <HeadlineStats rows={rows} />
+
+  <StackedBarChart
+    rows={rows}
+    series={series}
+    caption={`${metric.chartCaption}, ${firstYear}-${lastYear}`}
+  />
+  <YearTable rows={rows} series={series} />
+
+  <h2>Ce qu'il faut savoir pour lire ces chiffres</h2>
+  <div class="notes">
+    {
+      metric.notes.map((note) => (
+        <section class="card">
+          <h3>{note.title}</h3>
+          <p>{note.body}</p>
+        </section>
+      ))
+    }
+  </div>
+
+  <h2>Aller plus loin : les volumes par bâtiment</h2>
+  <div class="card cta">
+    <p>
+      Les comptes ne disent ni combien de mètres cubes sont consommés, ni par quel bâtiment. Ces
+      informations existent dans les factures de la Régie des eaux et dans le suivi des fluides de la
+      Ville. Ce sont des documents administratifs communicables à toute personne qui les demande.
+    </p>
+    <a class="button" href={`${base}demande-cada/`}>Lire le modèle de demande</a>
+  </div>
+
+  <h2>Correspondance des codes de fonction</h2>
+  <div class="card">
+    <table class="codes">
+      <thead>
+        <tr>
+          <th scope="col">Regroupement</th>
+          <th scope="col">Code M14 (jusqu'en 2017)</th>
+          <th scope="col">Code M57 (depuis 2018)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          functionsByGroup.map((group) => (
+            <tr>
+              <th scope="row">{group.label}</th>
+              {(['M14', 'M57'] as const).map((nomenclature) => (
+                <td>
+                  {group.codes
+                    .filter((code) => code.nomenclature === nomenclature)
+                    .map((code) => (
+                      <span class="code">
+                        <code>{code.code}</code> {code.label}
+                      </span>
+                    ))}
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p class="small">Les autres codes rencontrés sont regroupés dans « Autres services ».</p>
+  </div>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    {
+      data.sources.map((source) => (
+        <li>
+          <a href={source.url}>{source.title}</a>, {source.producer} ({source.licence})
+        </li>
+      ))
+    }
+    <li>
+      Fiche du jeu de données : <a href={SOURCE_PAGES.comptesAdministratifs}>comptes administratifs de
+      Montpellier</a>
+    </li>
+  </ul>
+  <p class="small">
+    Données extraites le {formatDate(data.generatedAt)} par le script
+    <code>scripts/build-data.ts</code>. Seules les dépenses réelles de fonctionnement du budget
+    principal sont retenues.
+  </p>
+</Base>
+
+<style>
+  .eyebrow {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .notes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 0.75rem;
+  }
+
+  .notes h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+  }
+
+  .notes p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .cta p {
+    margin-top: 0;
+    max-width: 44rem;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--surface-1);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .codes {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .codes th,
+  .codes td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.45rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .codes thead th {
+    color: var(--text-secondary);
+  }
+
+  .code {
+    display: block;
+    color: var(--text-secondary);
+  }
+
+  .small {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .sources {
+    padding-left: 1.2rem;
+  }
+
+  .sources li {
+    margin-bottom: 0.35rem;
+  }
+
+  @media (max-width: 40rem) {
+    .codes thead {
+      display: none;
+    }
+
+    .codes tr,
+    .codes th,
+    .codes td {
+      display: block;
+    }
+
+    .codes th[scope='row'] {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+</style>

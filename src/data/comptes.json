@@ -1,0 +1,984 @@
+{
+  "generatedAt": "2026-11-07T16:41:50.260Z",
+  "lines": [
+    {
+      "year": 2005,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 6379.74,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2005,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 20476.1,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2005,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "30",
+      "amount": 1999.27,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2005,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "412",
+      "amount": 21128.18,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2005,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 19960.04,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2006,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 2305.12,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2006,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 18567.75,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2006,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "30",
+      "amount": 5264.46,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2006,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "412",
+      "amount": 24285.45,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2006,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "64",
+      "amount": 66.23,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2006,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 8599.45,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2007,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 2837.1,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2007,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 24013.29,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2007,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "30",
+      "amount": 5511.38,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2007,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "412",
+      "amount": 19820,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2007,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 30214.91,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2008,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 603532.54,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2008,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 24031.91,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2008,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "30",
+      "amount": 4165.95,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2008,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "412",
+      "amount": 19820,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2008,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "64",
+      "amount": 89.99,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2008,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "816",
+      "amount": 118422.12,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2008,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 655709.54,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2009,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 769552.43,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2009,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 9827.35,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2009,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "30",
+      "amount": 3622.2,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2009,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "412",
+      "amount": 19737.83,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2009,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "813",
+      "amount": 139999.44,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2009,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "816",
+      "amount": 206966.8,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2009,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 648623.55,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2010,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 382548.82,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2010,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 7353.81,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2010,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "30",
+      "amount": 3108.06,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2010,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "412",
+      "amount": 20000,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2010,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "813",
+      "amount": 91015.56,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2010,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "816",
+      "amount": 392040.96,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2010,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 661468.29,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2011,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 963890,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2011,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 17800,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2011,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "813",
+      "amount": 99999.14,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2011,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "816",
+      "amount": 129150.35,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2011,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 591851.47,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2012,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 707338.38,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2012,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 18050,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2012,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "813",
+      "amount": 103415.66,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2012,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "816",
+      "amount": 40108.64,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2012,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 712477.32,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2013,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 722049.99,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2013,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 18050,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2013,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "30",
+      "amount": 3107.66,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2013,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "813",
+      "amount": 106072.06,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2013,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "816",
+      "amount": 44853.27,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2013,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 443499.97,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2014,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 706032.68,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2014,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 18050,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2014,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "813",
+      "amount": 107455.15,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2014,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "816",
+      "amount": 109984.01,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2014,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 444269.68,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2015,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 713209.6,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2015,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 18050,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2015,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "813",
+      "amount": 53165.18,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2015,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "816",
+      "amount": 16588.28,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2015,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 501516.84,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2016,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "20",
+      "amount": 740000,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2016,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "26",
+      "amount": 28050,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2016,
+      "nomenclature": "M14",
+      "nature": "60611",
+      "functionCode": "823",
+      "amount": 490361.53,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2018,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "020",
+      "amount": 596661.47,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2018,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "025",
+      "amount": 61645.59,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2018,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "325",
+      "amount": 129990.42,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2018,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "511",
+      "amount": 243991.43,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2018,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "7222",
+      "amount": 7717.09,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2019,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "020",
+      "amount": 604500.01,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2019,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "025",
+      "amount": 18353.11,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2019,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "325",
+      "amount": 88473.22,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2019,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "511",
+      "amount": 245595.56,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2019,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "7222",
+      "amount": 16615.49,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2020,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "020",
+      "amount": 536659.4,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2020,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "025",
+      "amount": 27499,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2020,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "325",
+      "amount": 47112.06,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2020,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "511",
+      "amount": 237549.71,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2020,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "7222",
+      "amount": 17333.95,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2021,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "020",
+      "amount": 645376.2,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2021,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "025",
+      "amount": 34955.63,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2021,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "325",
+      "amount": 43022.51,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2021,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "511",
+      "amount": 284979.69,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2021,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "7222",
+      "amount": 30999.95,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2022,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "020",
+      "amount": 547986.11,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2022,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "025",
+      "amount": 19073.84,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2022,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "325",
+      "amount": 37237.77,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2022,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "511",
+      "amount": 254999.61,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2022,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "7222",
+      "amount": 20000,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2023,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "020",
+      "amount": 522406.5,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2023,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "025",
+      "amount": 61443.85,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2023,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "325",
+      "amount": 26217.18,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2023,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "511",
+      "amount": 241109.31,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2023,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "7222",
+      "amount": 18330.2,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2024,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "020",
+      "amount": 547722.53,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2024,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "025",
+      "amount": 37995.87,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2024,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "325",
+      "amount": 37733.54,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2024,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "511",
+      "amount": 135995.27,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2024,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "7222",
+      "amount": 28499.21,
+      "sourceId": "mtp-ca-archives"
+    },
+    {
+      "year": 2025,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "020",
+      "amount": 612077.79,
+      "sourceId": "mtp-cfu-2025"
+    },
+    {
+      "year": 2025,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "025",
+      "amount": 36805.72,
+      "sourceId": "mtp-cfu-2025"
+    },
+    {
+      "year": 2025,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "325",
+      "amount": 23720.42,
+      "sourceId": "mtp-cfu-2025"
+    },
+    {
+      "year": 2025,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "511",
+      "amount": 281017.12,
+      "sourceId": "mtp-cfu-2025"
+    },
+    {
+      "year": 2025,
+      "nomenclature": "M57",
+      "nature": "60611",
+      "functionCode": "7222",
+      "amount": 21700,
+      "sourceId": "mtp-cfu-2025"
+    }
+  ],
+  "controls": [
+    {
+      "year": 2010,
+      "nature": "60611",
+      "amount": 1557535.5
+    },
+    {
+      "year": 2011,
+      "nature": "60611",
+      "amount": 1802690.96
+    },
+    {
+      "year": 2012,
+      "nature": "60611",
+      "amount": 1581390
+    },
+    {
+      "year": 2013,
+      "nature": "60611",
+      "amount": 1337632.95
+    },
+    {
+      "year": 2014,
+      "nature": "60611",
+      "amount": 1385791.52
+    },
+    {
+      "year": 2015,
+      "nature": "60611",
+      "amount": 1302529.9
+    },
+    {
+      "year": 2016,
+      "nature": "60611",
+      "amount": 1258411.53
+    },
+    {
+      "year": 2017,
+      "nature": "60611",
+      "amount": 1399468.62
+    },
+    {
+      "year": 2018,
+      "nature": "60611",
+      "amount": 1040006
+    },
+    {
+      "year": 2019,
+      "nature": "60611",
+      "amount": 973537.39
+    },
+    {
+      "year": 2020,
+      "nature": "60611",
+      "amount": 866154.12
+    },
+    {
+      "year": 2021,
+      "nature": "60611",
+      "amount": 1039333.98
+    },
+    {
+      "year": 2022,
+      "nature": "60611",
+      "amount": 879297.33
+    },
+    {
+      "year": 2023,
+      "nature": "60611",
+      "amount": 869507.04
+    },
+    {
+      "year": 2024,
+      "nature": "60611",
+      "amount": 787946.42
+    },
+    {
+      "year": 2025,
+      "nature": "60611",
+      "amount": 975321.05
+    }
+  ],
+  "functionLabels": {
+    "M14": {
+      "20": "ADMINISTRATION GENERALE DE LA COLLECTIVITE",
+      "26": "CIMETIERES ET POMPES FUNEBRES",
+      "30": "SERVICES COMMUNS",
+      "64": "CRECHES ET GARDERIES",
+      "412": "STADES",
+      "813": "PROPRETE URBAINE",
+      "816": "AUTRES RESEAUX ET SERVICES DIVERS",
+      "823": "ESPACES VERTS URBAINS"
+    },
+    "M57": {
+      "325": "Autres équipements sportifs ou de loisirs",
+      "511": "Espaces verts urbains",
+      "7222": "Action en matière de propreté urbaine et de nettoiement",
+      "020": "Administration générale de la collectivité",
+      "025": "Cimetières et pompes funèbres"
+    }
+  },
+  "sources": [
+    {
+      "id": "mtp-ca-archives",
+      "title": "Comptes administratifs de Montpellier (2005-2016 en CSV, 2018-2024 en XML)",
+      "producer": "Ville de Montpellier, via data.montpellier3m.fr",
+      "url": "https://data.montpellier3m.fr/sites/default/files/ressources/VilleMTP_MTP_CA_Archives.zip",
+      "licence": "ODbL"
+    },
+    {
+      "id": "mtp-cfu-2025",
+      "title": "Compte financier unique 2025 de la Ville de Montpellier",
+      "producer": "Ville de Montpellier, via data.montpellier3m.fr",
+      "url": "https://data.montpellier3m.fr/sites/default/files/ressources/VilleMTP_MTP_CFU_2025.xml",
+      "licence": "ODbL"
+    },
+    {
+      "id": "m57-plan-de-compte",
+      "title": "Plan de comptes M57 (libellés des fonctions)",
+      "producer": "DGFiP, via odm-budgetaire.org",
+      "url": "http://odm-budgetaire.org/composants/normes/2024/M57/M57_D/planDeCompte.xml",
+      "licence": "Licence Ouverte"
+    },
+    {
+      "id": "dgfip-balances",
+      "title": "Balances comptables des communes (contrôle des totaux, et 2017)",
+      "producer": "DGFiP, via data.economie.gouv.fr",
+      "url": "https://data.economie.gouv.fr/explore/?q=balances-comptables-des-communes",
+      "licence": "Licence Ouverte"
+    }
+  ]
+}

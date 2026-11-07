@@ -1,0 +1,341 @@
+---
+import type { YearRow } from '../lib/aggregate'
+import { niceTicks, type Series, stackBars, topRoundedRect } from '../lib/chart'
+import { formatCompactEuros, formatEuros } from '../lib/format'
+
+interface Props {
+  rows: YearRow[]
+  series: Series[]
+  caption: string
+}
+
+const { rows, series, caption } = Astro.props
+
+const WIDTH = 720
+const HEIGHT = 380
+const area = { left: 64, top: 28, width: WIDTH - 64 - 12, height: HEIGHT - 28 - 36 }
+
+const ticks = niceTicks(Math.max(...rows.map((row) => row.total)))
+const maxTick = ticks.at(-1) ?? 1
+const order = series.map((s) => s.id)
+const bars = stackBars(rows, order, area, maxTick)
+const seriesById = new Map(series.map((s) => [s.id, s]))
+const yOf = (value: number) => area.top + area.height - (value / maxTick) * area.height
+const last = bars.at(-1)
+const lastRow = rows.at(-1)
+
+const fill = (id: string) => {
+  const s = seriesById.get(id)
+  return s?.hatched ? 'url(#hatch)' : (s?.color ?? 'var(--series-neutral)')
+}
+
+const tooltipRows = rows.map((row) => ({
+  year: row.year,
+  total: formatEuros(row.total),
+  source: row.source,
+  parts: order
+    .filter((id) => (row.byGroup[id] ?? 0) > 0)
+    .reverse()
+    .map((id) => ({
+      label: seriesById.get(id)?.label ?? id,
+      color: seriesById.get(id)?.color ?? 'var(--series-neutral)',
+      value: formatEuros(row.byGroup[id] ?? 0),
+    })),
+}))
+---
+
+<figure class="chart card" data-chart={JSON.stringify(tooltipRows)}>
+  <figcaption class="caption">{caption}</figcaption>
+
+  <ul class="legend" aria-label="Légende">
+    {
+      [...series].reverse().map((s) => (
+        <li>
+          <span class:list={['swatch', { hatched: s.hatched }]} style={`--swatch: ${s.color}`} />
+          {s.label}
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="plot">
+    <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={caption}>
+      <defs>
+        <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="6" height="6" fill="var(--surface-1)"></rect>
+          <line x1="0" y1="0" x2="0" y2="6" stroke="var(--series-neutral)" stroke-width="3"></line>
+        </pattern>
+      </defs>
+
+      {
+        ticks.map((tick) => (
+          <g class="tick">
+            <line x1={area.left} x2={area.left + area.width} y1={yOf(tick)} y2={yOf(tick)} />
+            <text x={area.left - 8} y={yOf(tick)} dy="0.35em" text-anchor="end">
+              {tick === 0 ? '0' : formatCompactEuros(tick)}
+            </text>
+          </g>
+        ))
+      }
+
+      {
+        bars.map((bar, index) => (
+          <g class="bar" data-index={index}>
+            {bar.segments.map((segment) =>
+              segment.isTop ? (
+                <path
+                  d={topRoundedRect(bar.x, segment.y, bar.width, segment.height)}
+                  fill={fill(segment.groupId)}
+                />
+              ) : (
+                <rect
+                  x={bar.x}
+                  y={segment.y}
+                  width={bar.width}
+                  height={segment.height}
+                  fill={fill(segment.groupId)}
+                />
+              ),
+            )}
+            {index % 2 === 0 && (
+              <text class="year" x={bar.x + bar.width / 2} y={area.top + area.height + 22} text-anchor="middle">
+                {bar.year}
+              </text>
+            )}
+            <rect
+              class="hit"
+              x={bar.slotX}
+              y={area.top}
+              width={bar.slotWidth}
+              height={area.height + 28}
+              tabindex="0"
+              role="button"
+              aria-label={`${bar.year} : ${tooltipRows[index]?.total}`}
+              data-index={index}
+            />
+          </g>
+        ))
+      }
+
+      <line
+        class="baseline"
+        x1={area.left}
+        x2={area.left + area.width}
+        y1={area.top + area.height}
+        y2={area.top + area.height}
+      />
+
+      {
+        last && lastRow && (
+          <text class="direct-label" x={last.x + last.width} y={yOf(lastRow.total) - 8} text-anchor="end">
+            {formatCompactEuros(lastRow.total)}
+          </text>
+        )
+      }
+    </svg>
+    <div class="tooltip" role="status" hidden></div>
+  </div>
+</figure>
+
+<script>
+  interface TooltipPart {
+    label: string
+    color: string
+    value: string
+  }
+  interface TooltipRow {
+    year: number
+    total: string
+    source: 'ville' | 'dgfip'
+    parts: TooltipPart[]
+  }
+
+  const escapeHtml = (text: string) =>
+    text.replace(/[&<>"]/g, (char) => `&#${char.charCodeAt(0)};`)
+
+  const render = (row: TooltipRow) => `
+    <strong>${row.year}</strong>
+    <span class="tt-total">${escapeHtml(row.total)}</span>
+    <ul>${row.parts
+      .map(
+        (part) =>
+          `<li><span class="tt-swatch" style="background:${part.color}"></span>${escapeHtml(part.label)}<span>${escapeHtml(part.value)}</span></li>`,
+      )
+      .join('')}</ul>
+    ${row.source === 'dgfip' ? '<small>Total DGFiP, non ventilé</small>' : ''}`
+
+  for (const figure of document.querySelectorAll<HTMLElement>('[data-chart]')) {
+    const rows = JSON.parse(figure.dataset.chart ?? '[]') as TooltipRow[]
+    const plot = figure.querySelector<HTMLElement>('.plot')
+    const tooltip = figure.querySelector<HTMLElement>('.tooltip')
+    if (!plot || !tooltip) continue
+
+    const show = (target: Element) => {
+      const row = rows[Number((target as HTMLElement).dataset.index)]
+      if (!row) return
+      figure.querySelectorAll('.bar.active').forEach((bar) => bar.classList.remove('active'))
+      target.closest('.bar')?.classList.add('active')
+      tooltip.innerHTML = render(row)
+      tooltip.hidden = false
+      const hit = target.getBoundingClientRect()
+      const box = plot.getBoundingClientRect()
+      const left = hit.left - box.left + plot.scrollLeft + hit.width / 2
+      const fitsRight = left + tooltip.offsetWidth + 12 < plot.scrollLeft + box.width
+      tooltip.style.left = `${fitsRight ? left + 12 : left - tooltip.offsetWidth - 12}px`
+      tooltip.style.top = '8px'
+    }
+    const hide = () => {
+      tooltip.hidden = true
+      figure.querySelectorAll('.bar.active').forEach((bar) => bar.classList.remove('active'))
+    }
+
+    for (const hit of figure.querySelectorAll('.hit')) {
+      hit.addEventListener('pointerenter', () => show(hit))
+      hit.addEventListener('focus', () => show(hit))
+      hit.addEventListener('blur', hide)
+    }
+    plot.addEventListener('pointerleave', hide)
+  }
+</script>
+
+<style>
+  .chart {
+    margin: 0;
+  }
+
+  .caption {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    list-style: none;
+    margin: 0 0 0.75rem;
+    padding: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .swatch {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 3px;
+    background: var(--swatch);
+  }
+
+  .swatch.hatched {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--series-neutral) 0 3px,
+      var(--surface-1) 3px 6px
+    );
+    outline: 1px solid var(--series-neutral);
+  }
+
+  .plot {
+    position: relative;
+    overflow-x: auto;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    min-width: 560px;
+    height: auto;
+    font-size: 13px;
+  }
+
+  .tick line {
+    stroke: var(--grid);
+  }
+
+  .tick text,
+  .year {
+    fill: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .baseline {
+    stroke: var(--text-muted);
+  }
+
+  .direct-label {
+    fill: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .hit {
+    fill: transparent;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .bar :is(path, rect:not(.hit)) {
+    transition: opacity 120ms;
+  }
+
+  .plot:has(.bar.active) .bar:not(.active) :is(path, rect:not(.hit)) {
+    opacity: 0.45;
+  }
+
+  .hit:focus-visible {
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+
+  .tooltip {
+    position: absolute;
+    z-index: 1;
+    min-width: 14rem;
+    max-width: 18rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    font-size: 0.8125rem;
+    pointer-events: none;
+  }
+
+  .tooltip :global(strong) {
+    display: block;
+  }
+
+  .tooltip :global(.tt-total) {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  .tooltip :global(ul) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tooltip :global(li) {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  .tooltip :global(li span:last-child) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tooltip :global(.tt-swatch) {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 2px;
+  }
+</style>

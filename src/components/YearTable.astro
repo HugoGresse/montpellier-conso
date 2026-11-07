@@ -1,0 +1,103 @@
+---
+import type { YearRow } from '../lib/aggregate'
+import type { Series } from '../lib/chart'
+import { formatEuros } from '../lib/format'
+
+interface Props {
+  rows: YearRow[]
+  series: Series[]
+}
+
+const { rows, series } = Astro.props
+const cell = (row: YearRow, id: string) => {
+  const value = row.byGroup[id]
+  return value ? formatEuros(value) : '–'
+}
+const controlStatus = (row: YearRow) => {
+  if (row.source === 'dgfip') return 'Source DGFiP'
+  if (row.control === undefined) return 'Non disponible'
+  return Math.abs(row.control - row.total) < 0.01 ? 'Identique' : formatEuros(row.control)
+}
+---
+
+<details class="card table-card">
+  <summary>Voir les données en tableau</summary>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Année</th>
+          {series.map((s) => <th scope="col">{s.label}</th>)}
+          <th scope="col">Total</th>
+          <th scope="col">Contrôle DGFiP</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          [...rows].reverse().map((row) => (
+            <tr>
+              <th scope="row">{row.year}</th>
+              {series.map((s) => <td>{cell(row, s.id)}</td>)}
+              <td class="total">{formatEuros(row.total)}</td>
+              <td class="control">{controlStatus(row)}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<style>
+  .table-card {
+    margin-top: 1rem;
+    padding: 0;
+  }
+
+  summary {
+    cursor: pointer;
+    padding: 0.9rem 1.25rem;
+    font-weight: 600;
+  }
+
+  .scroll {
+    overflow-x: auto;
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  thead th {
+    color: var(--text-secondary);
+    font-weight: 600;
+    white-space: normal;
+    vertical-align: bottom;
+    min-width: 6.5rem;
+  }
+
+  th:first-child {
+    text-align: left;
+    min-width: 0;
+  }
+
+  .total {
+    font-weight: 600;
+  }
+
+  .control {
+    color: var(--text-muted);
+  }
+</style>

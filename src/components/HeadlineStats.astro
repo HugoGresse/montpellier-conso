@@ -1,0 +1,83 @@
+---
+import { changeRatio, type YearRow } from '../lib/aggregate'
+import { formatChange, formatEuros } from '../lib/format'
+
+interface Props {
+  rows: YearRow[]
+}
+
+const { rows } = Astro.props
+const latest = rows.at(-1)
+const previous = rows.at(-2)
+const peak = rows.reduce<YearRow | undefined>(
+  (best, row) => (!best || row.total > best.total ? row : best),
+  undefined,
+)
+const sinceLastYear = latest ? changeRatio(latest.total, previous?.total) : undefined
+const sincePeak = latest && peak ? changeRatio(latest.total, peak.total) : undefined
+---
+
+{
+  latest && (
+    <div class="stats">
+      <div class="card stat">
+        <span class="label">Dépensé en {latest.year}</span>
+        <span class="value">{formatEuros(latest.total)}</span>
+        {sinceLastYear !== undefined && previous && (
+          <span class="detail">
+            {formatChange(sinceLastYear)} par rapport à {previous.year}
+          </span>
+        )}
+      </div>
+      {peak && (
+        <div class="card stat">
+          <span class="label">Année la plus chère</span>
+          <span class="value">{peak.year}</span>
+          <span class="detail">
+            {formatEuros(peak.total)}
+            {sincePeak !== undefined && peak !== latest && `, soit ${formatChange(sincePeak)} en ${latest.year}`}
+          </span>
+        </div>
+      )}
+      <div class="card stat">
+        <span class="label">Années couvertes</span>
+        <span class="value">{rows.length}</span>
+        <span class="detail">
+          de {rows[0]?.year} à {latest.year}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+
+  .detail {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+</style>
