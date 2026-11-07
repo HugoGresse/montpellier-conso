@@ -8,6 +8,7 @@ const compactEuros = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
   currency: 'EUR',
   notation: 'compact',
+  minimumFractionDigits: 0,
   maximumFractionDigits: 1,
 })
 
